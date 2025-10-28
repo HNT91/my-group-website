@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>My Group Site</title>
+    <base href="/" />
+    <link href="css/app.css" rel="stylesheet" />
+
+    <style>
+        /* 💞 Idle hearts animation */
+        @keyframes float {
+            from {
+                transform: translateY(0);
+                opacity: 0.8;
+            }
+
+            to {
+                transform: translateY(-100px);
+                opacity: 0;
+            }
+        }
+
+        /* 🌌 Визуализатор под музыку */
+        #music-visualizer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            background: radial-gradient(circle at 50% 50%, rgba(0, 255, 255, 0.15), transparent 60%);
+            filter: blur(60px);
+            opacity: 0.4;
+            transition: transform 0.1s linear, opacity 0.1s linear;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 🎵 Фоновая музыка -->
+    <audio id="bg-music" autoplay loop>
+        <source src="audio/theme.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- 🌈 Визуализатор -->
+    <div id="music-visualizer"></div>
+
+    <!-- 🧩 Контейнер для Blazor -->
+    <div id="app">...</div>
+
+    <!-- 💫 (Курсор скрыт, оставлен только трейл) -->
+    <div id="cursor-circle" style="display:none;"></div>
+
+    <!-- 💙 Скрипты -->
+    <script>
+        // 🌊 Трейл
+        document.addEventListener("mousemove", (e) => {
+            const x = e.clientX;
+            const y = e.clientY;
+            const dot = document.createElement("div");
+            dot.className = "trail";
+            dot.style.left = x + "px";
+            dot.style.top = y + "px";
+            document.body.appendChild(dot);
+            setTimeout(() => dot.remove(), 500);
+        });
+
+        // 💥 Частицы при клике
+        document.addEventListener("click", (e) => {
+            for (let i = 0; i < 8; i++) {
+                const particle = document.createElement("div");
+                particle.className = "particle";
+                document.body.appendChild(particle);
+                const x = e.clientX + (Math.random() - 0.5) * 10;
+                const y = e.clientY + (Math.random() - 0.5) * 10;
+                particle.style.left = x + "px";
+                particle.style.top = y + "px";
+                setTimeout(() => particle.remove(), 400);
+            }
+        });
+
+        // 💞 Idle hearts (сердечки при бездействии)
+        let idle;
+        document.addEventListener("mousemove", () => {
+            clearTimeout(idle);
+            idle = setTimeout(() => spawnHearts(), 3000);
+        });
+
+        function spawnHearts() {
+            for (let i = 0; i < 6; i++) {
+                const h = document.createElement("div");
+                h.textContent = "❤";
+                h.style.position = "fixed";
+                h.style.left = Math.random() * window.innerWidth + "px";
+                h.style.bottom = "0px";
+                h.style.fontSize = (Math.random() * 20 + 10) + "px";
+                h.style.color = "#ADD8E6";
+                h.style.opacity = 0.8;
+                h.style.animation = "float 3s linear forwards";
+                h.style.zIndex = 9999;
+                document.body.appendChild(h);
+                setTimeout(() => h.remove(), 3000);
+            }
+        }
+    </script>
+
+    <!-- 🌈 Визуализатор под музыку -->
+    <script>
+        const music = document.getElementById("bg-music");
+        const visualizer = document.getElementById("music-visualizer");
+
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const source = audioCtx.createMediaElementSource(music);
+        const analyser = audioCtx.createAnalyser();
+        analyser.fftSize = 256;
+
+        const bufferLength = analyser.frequencyBinCount;
+        const dataArray = new Uint8Array(bufferLength);
+
+        source.connect(analyser);
+        analyser.connect(audioCtx.destination);
+
+        function animate() {
+            requestAnimationFrame(animate);
+            analyser.getByteFrequencyData(dataArray);
+
+            let avg = dataArray.reduce((a, b) => a + b) / bufferLength;
+            let scale = 1 + avg / 200;
+            let opacity = Math.min(0.7, avg / 200);
+
+            visualizer.style.transform = `scale(${scale})`;
+            visualizer.style.opacity = opacity;
+        }
+
+        music.onplay = () => {
+            if (audioCtx.state === "suspended") audioCtx.resume();
+            animate();
+        };
+    </script>
+
+    <!-- ⚙️ Фреймворк Blazor -->
+    <script src="_framework/blazor.webassembly.js"></script>
+</body>
+</html>
