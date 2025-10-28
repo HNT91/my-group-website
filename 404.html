@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>My Group Site</title>
+
+    <!-- ⚡ MUST be first in <head> for GitHub Pages -->
+    <base href="/my-group-website/" />
+
+    <!-- ⚙ Fix GitHub Pages SPA routing -->
+    <script>
+        if (!location.pathname.startsWith("/my-group-website/")) {
+            location.replace("/my-group-website/" + location.pathname.substring(1));
+        }
+    </script>
+
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link href="css/app.css" rel="stylesheet" />
+</head>
+
+<body>
+    <!-- 🎵 Фоновая музыка -->
+    <audio id="bg-music" autoplay loop>
+        <source src="audio/theme.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- 🌈 Визуализатор -->
+    <div id="music-visualizer"></div>
+
+    <!-- 🧩 Контейнер для Blazor -->
+    <div id="app">...</div>
+
+    <!-- 💫 (Курсор скрыт, оставлен только трейл) -->
+    <div id="cursor-circle" style="display:none;"></div>
+
+    <!-- ✅ Скрипты -->
+    <script src="_framework/blazor.webassembly.js"></script>
+</body>
+</html>
