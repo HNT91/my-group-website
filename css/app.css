@@ -14,7 +14,7 @@ html, body {
     overflow-y: hidden;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: #fff;
-    background: url("/images/pixelart.gif") no-repeat center center fixed;
+    background: url("images/pixelart.gif") no-repeat center center fixed;
     background-size: cover;
     position: relative;
 }
